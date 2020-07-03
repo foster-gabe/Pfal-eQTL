@@ -1,0 +1,23 @@
+FROM broadinstitute/gtex_eqtl:V8
+RUN wget --no-check-certificate https://qtltools.github.io/qtltools/binaries/QTLtools_1.2_source.tar.gz && \
+tar -xf QTLtools_1.2_source.tar.gz && rm QTLtools_1.2_source.tar.gz
+
+COPY /pfalsrc/Makefile QTLtools_1.2_source/
+
+RUN cd QTLtools_1.2_source && make
+
+ENV PATH "$PATH:/QTLtools_1.2_source/bin"
+
+COPY /pfalsrc /pfalsrc
+
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install r-base -y
+
+
+RUN wget https://github.com/foster-gabe/PFExpTools/raw/master/PFExpTools_1.0.0.tar.gz && \
+    R CMD INSTALL PFExpTools_1.0.0.tar.gz && \
+    rm PFExpTools_1.0.0.tar.gz
+
+RUN R -e "install.packages('argparser', dependencies=TRUE)"
+
+
