@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y software-properties-common && \
 		libxml2-dev \
 		libssl-dev \
 		vcftools \
+		-y git \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     apt-get clean && \
     apt-get autoremove -y && \
@@ -80,12 +81,7 @@ RUN mkdir /opt/plink && cd /opt/plink && \
     unzip plink_linux_x86_64_20200107.zip && rm plink_linux_x86_64_20200107.zip
 ENV PATH $PATH:/opt/plink
 
-# FastQTL
-RUN cd /opt && \
-    wget https://github.com/francois-a/fastqtl/archive/59bcdc06c4277b2cf2e06f242eb89f7e1fd4cacd.tar.gz && \
-    tar -xf 59bcdc06c4277b2cf2e06f242eb89f7e1fd4cacd.tar.gz && rm 59bcdc06c4277b2cf2e06f242eb89f7e1fd4cacd.tar.gz && \
-    mv fastqtl-59bcdc06c4277b2cf2e06f242eb89f7e1fd4cacd fastqtl && \
-    cd fastqtl && mkdir obj && sed -i 's/RMATH=/#RMATH/' Makefile && make
+
 ENV PATH /opt/fastqtl/bin:$PATH
 ENV PATH /usr/bin:$PATH
 
@@ -96,10 +92,18 @@ RUN Rscript -e "devtools::install_github('foster-gabe/PFExpTools', ref = 'backco
 
 
 RUN wget --no-check-certificate https://qtltools.github.io/qtltools/binaries/QTLtools_1.2_source.tar.gz && \
-tar -xf QTLtools_1.2_source.tar.gz && rm QTLtools_1.2_source.tar.gz
+    tar -xf QTLtools_1.2_source.tar.gz && rm QTLtools_1.2_source.tar.gz
 COPY /pfalsrc/Makefile QTLtools_1.2_source/
 RUN cd QTLtools_1.2_source && make
+RUN cd QTLtools_1.2_source/script $$ sed -i 's/Ph\$7/Ph\$V19/' runFDR_ftrans.R && sed -i 's/Nh\$7/Nh\$V12/' runFDR_ftrans.R
 ENV PATH "$PATH:/QTLtools_1.2_source/bin"
+
+RUN git clone https://github.com/francois-a/fastqtl
+RUN cd fastqtl && mkdir obj && sed -i 's/RMATH=/#RMATH/' Makefile && make
+ENV PATH "$PATH:/fastqtl/bin"
+
+RUN pip install multiprocess
+
 
 # copy scripts
 COPY pfalsrc pfalsrc/
