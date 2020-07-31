@@ -44,6 +44,7 @@ M <- t(as.matrix(df))
 # Interpolate missing values with gene means if missing values present
 
 M[] = as.matrix(apply(M, 1, function(x) ifelse(is.na(x), mean(x, na.rm = TRUE), x)))
+class(M) <- 'numeric'
 
 cat("done.\n")
 
