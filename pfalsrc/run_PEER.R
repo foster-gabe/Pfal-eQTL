@@ -37,7 +37,14 @@ if (grepl('.bed$', argv$expr.file) || grepl('.bed.gz$', argv$expr.file)) {
 } else {
     df <- read.table(argv$expr.file, sep="\t", nrows=nrows, header=TRUE, check.names=FALSE, comment.char="", row.names=1)
 }
+
+
 M <- t(as.matrix(df))
+
+# Interpolate missing values with gene means if missing values present
+
+M[] = apply(M, 1, function(x) ifelse(is.na(x), mean(x, na.rm = TRUE), x))
+
 cat("done.\n")
 
 # run PEER
