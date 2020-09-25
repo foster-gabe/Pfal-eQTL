@@ -92,7 +92,7 @@ RUN Rscript -e "devtools::install_github('foster-gabe/PFExpTools', ref = 'backco
 
 
 RUN wget --no-check-certificate https://qtltools.github.io/qtltools/binaries/QTLtools_1.3.1_source.tar.gz && \
-    tar -xf QTLtools_1.2_source.tar.gz && rm QTLtools_1.3.1_source.tar.gz
+    tar -xf QTLtools_1.3.1_source.tar.gz && rm QTLtools_1.3.1_source.tar.gz
 COPY /pfalsrc/Makefile QTLtools_1.3.1_source/
 RUN cd QTLtools_1.3.1_source && make
 RUN cd QTLtools_1.3.1_source/script $$ sed -i 's/Ph\$7/Ph\$V19/' runFDR_ftrans.R && sed -i 's/Nh\$7/Nh\$V12/' runFDR_ftrans.R
