@@ -95,7 +95,7 @@ RUN wget --no-check-certificate https://qtltools.github.io/qtltools/binaries/QTL
     tar -xf QTLtools_1.3.1_source.tar.gz && rm QTLtools_1.3.1_source.tar.gz
 COPY /pfalsrc/Makefile qtltools/
 RUN cd qtltools && make
-RUN cd qtltools/script $$ sed -i 's/Ph\$7/Ph\$V19/' runFDR_ftrans.R && sed -i 's/Nh\$7/Nh\$V12/' runFDR_ftrans.R
+RUN cd qtltools/scripts $$ sed -i 's/Ph\$7/Ph\$V19/' runFDR_ftrans.R && sed -i 's/Nh\$7/Nh\$V12/' runFDR_ftrans.R
 ENV PATH "$PATH:/qtltools/bin"
 
 RUN git clone https://github.com/francois-a/fastqtl
